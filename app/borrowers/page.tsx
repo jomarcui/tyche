@@ -62,15 +62,15 @@ export default function BorrowersPage() {
             <h1 className="text-2xl font-bold">Borrowers</h1>
           </div>
           <div className="mb-4 flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              Borrowers: {borrowers.length || "0"}
+            <div className="text-sm text-gray-600">
+              {borrowers.length} borrower{borrowers.length !== 1 && "s"}
             </div>
             <div>
               <Link
                 href="/borrowers/create"
                 className="inline-flex items-center rounded-lg bg-indigo-600 px-4 py-2 text-white shadow transition hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
               >
-                + Add Borrower
+                Add Borrower
               </Link>
             </div>
           </div>
@@ -121,12 +121,20 @@ export default function BorrowersPage() {
                     </td>
                     <td className="px-6 py-4 text-right text-sm">
                       <Link
+                        href={`/borrowers/${b.id}`}
+                        className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-1 text-sm font-medium text-white shadow transition hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                      >
+                        View Details
+                      </Link>
+                    </td>
+                    {/* <td className="px-6 py-4 text-right text-sm">
+                      <Link
                         href={`/borrowers/${b.id}/edit`}
                         className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-1 text-sm font-medium text-white shadow transition hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                       >
                         Edit
                       </Link>
-                    </td>
+                    </td> */}
                   </tr>
                 ))}
               </tbody>
