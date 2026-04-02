@@ -4,11 +4,11 @@ import { useForm } from "react-hook-form";
 import { api } from "@/services/api";
 import { AuthContext } from "@/context/AuthContext";
 import { useRouter, useParams } from "next/navigation";
-import ProtectedRoute from "@/components/ProtectedRoute";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { AxiosError } from "axios";
 import { ApiErrorResponse } from "@/types/api";
 import Loading from "@/components/Loading";
+import Link from "next/link";
 
 type BorrowerForm = {
   firstName: string;
@@ -54,9 +54,7 @@ export default function EditBorrowerPage() {
 
   const onSubmit = async (data: BorrowerForm) => {
     try {
-      await api.patch(`/borrowers/${borrowerId}`, data, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await api.patch(`/borrowers/${borrowerId}`, data);
       router.push("/borrowers");
     } catch (err) {
       const error = err as AxiosError<ApiErrorResponse>;
@@ -67,43 +65,59 @@ export default function EditBorrowerPage() {
   if (loading) return <Loading message="Loading borrower" />;
 
   return (
-    <ProtectedRoute>
-      <DashboardLayout>
-        <div className="mx-auto max-w-xl rounded bg-white p-6 shadow">
-          <h1 className="mb-6 text-2xl font-bold">Edit Borrower</h1>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                First Name
-              </label>
-              <input
-                {...register("firstName", {
-                  required: "First name is required",
-                })}
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-lg placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
-              />
-              {errors.firstName && (
-                <p className="text-sm text-red-500">
-                  {errors.firstName.message}
-                </p>
-              )}
+    <DashboardLayout>
+      <div className="min-h-screen w-full flex-1">
+        {/* Page Header */}
+        <header className="sticky top-0 z-10 mb-6 flex items-center justify-between">
+          <h1 className="text-xl font-semibold text-gray-800">Edit Borrower</h1>
+          <Link
+            href="/borrowers"
+            className="rounded-lg bg-blue-600 px-4 py-2 text-white transition hover:bg-blue-700"
+          >
+            Back to Borrowers
+          </Link>
+        </header>
+
+        {/* Form Card */}
+        <div className="max-w-2xl rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+            {/* First Name / Last Name */}
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  First Name
+                </label>
+                <input
+                  {...register("firstName", {
+                    required: "First name is required",
+                  })}
+                  className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                />
+                {errors.firstName && (
+                  <p className="mt-1 text-sm text-red-500">
+                    {errors.firstName.message}
+                  </p>
+                )}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Last Name
+                </label>
+                <input
+                  {...register("lastName", {
+                    required: "Last name is required",
+                  })}
+                  className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                />
+                {errors.lastName && (
+                  <p className="mt-1 text-sm text-red-500">
+                    {errors.lastName.message}
+                  </p>
+                )}
+              </div>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Last Name
-              </label>
-              <input
-                {...register("lastName", { required: "Last name is required" })}
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-lg placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
-              />
-              {errors.lastName && (
-                <p className="text-sm text-red-500">
-                  {errors.lastName.message}
-                </p>
-              )}
-            </div>
-
+            {/* Email */}
             <div>
               <label className="block text-sm font-medium text-gray-700">
                 Email
@@ -117,13 +131,16 @@ export default function EditBorrowerPage() {
                   },
                 })}
                 type="email"
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-lg placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
               />
               {errors.email && (
-                <p className="text-sm text-red-500">{errors.email.message}</p>
+                <p className="mt-1 text-sm text-red-500">
+                  {errors.email.message}
+                </p>
               )}
             </div>
 
+            {/* Phone */}
             <div>
               <label className="block text-sm font-medium text-gray-700">
                 Phone
@@ -133,26 +150,32 @@ export default function EditBorrowerPage() {
                   required: "Phone is required",
                   minLength: { value: 7, message: "Phone too short" },
                 })}
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-lg placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
               />
               {errors.phone && (
-                <p className="text-sm text-red-500">{errors.phone.message}</p>
+                <p className="mt-1 text-sm text-red-500">
+                  {errors.phone.message}
+                </p>
               )}
             </div>
 
+            {/* Address */}
             <div>
               <label className="block text-sm font-medium text-gray-700">
                 Address
               </label>
               <textarea
                 {...register("address", { required: "Address is required" })}
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-lg placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
               />
               {errors.address && (
-                <p className="text-sm text-red-500">{errors.address.message}</p>
+                <p className="mt-1 text-sm text-red-500">
+                  {errors.address.message}
+                </p>
               )}
             </div>
 
+            {/* Submit Button */}
             <button
               type="submit"
               disabled={isSubmitting}
@@ -162,7 +185,7 @@ export default function EditBorrowerPage() {
             </button>
           </form>
         </div>
-      </DashboardLayout>
-    </ProtectedRoute>
+      </div>
+    </DashboardLayout>
   );
 }

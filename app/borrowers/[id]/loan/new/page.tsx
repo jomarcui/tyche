@@ -1,10 +1,15 @@
 import LoanApplicationClient from "./LoanApplicationClient";
+import DashboardLayout from "@/components/layout/DashboardLayout";
 
 export default async function LoanApplicationPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const { id } = await params; // ✅ unwrap the promise
-  return <LoanApplicationClient borrowerId={id} />;
+  const { id } = await params;
+  return (
+    <DashboardLayout>
+      <LoanApplicationClient borrowerId={id} />
+    </DashboardLayout>
+  );
 }

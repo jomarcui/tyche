@@ -1,8 +1,9 @@
 export interface Loan {
-  id: number;
-  borrowerName: string;
-  amount: number;
+  id: string;
+  principal: number;
+  termMonths: number;
   interestRate: number;
   status: "pending" | "approved" | "rejected" | "active" | "closed";
-  createdAt: string;
+  startDate: string;
+  loanNumber: string;
 }
